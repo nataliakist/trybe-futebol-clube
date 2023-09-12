@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import Email from './Email';
+import JWT from '../utils/JWTUtils';
 
 export default class Validations {
   private static passwordMinLength = 6;
   static validateLogin(req: Request, res: Response, next: NextFunction): Response | void {
     const { email, password } = req.body;
-    console.log(email, password);
 
     if (!email || !password) return res.status(400).json({ message: 'All fields must be filled' });
 
@@ -20,7 +20,14 @@ export default class Validations {
 
   static validateToken(req: Request, res: Response, next: NextFunction): Response | void {
     const token = req.headers.authorization;
-    if (!token) return res.status(404).json({ message: 'Token not found' });
+    if (!token) return res.status(401).json({ message: 'Token not found' });
+
+    const isValidToken = JWT.verify(token);
+
+    if (isValidToken === 'Token must be a valid token') {
+      return res.status(401).json({ message: 'Token must be a valid token' });
+    }
+
     next();
   }
 }

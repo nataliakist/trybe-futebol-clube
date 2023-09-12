@@ -10,4 +10,8 @@ export interface IUser extends Identificable, ILogin {
   role: string;
 }
 
+export interface IUserVerify {
+  user: IUser;
+}
+
 export type IUserResponse = Omit<IUser, 'password'>;

@@ -6,6 +6,12 @@ const loginRouter = Router();
 
 const loginController = new LoginController();
 
+loginRouter.get(
+  '/role',
+  Validations.validateToken,
+  (req, res) => LoginController.getUserRole(req, res),
+);
+
 loginRouter.post(
   '/',
   Validations.validateLogin,
