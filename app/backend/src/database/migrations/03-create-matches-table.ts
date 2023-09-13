@@ -32,7 +32,7 @@ export default {
       },
       inProgress: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
+        defaultValue: false,
         field: 'in_progress',
       }
     });
