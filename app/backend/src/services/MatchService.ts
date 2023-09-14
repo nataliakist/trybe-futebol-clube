@@ -2,11 +2,16 @@ import MatchModel from '../models/MatchModel';
 import { IMatch, INewMatch } from '../Interfaces/matches/IMatch';
 import { IMatchModel } from '../Interfaces/matches/IMatchModel';
 import { ServiceResponse, ServiceMessage } from '../Interfaces/ServiceResponse';
+import TeamModel from '../models/TeamModel';
+import { ITeamModel } from '../Interfaces/teams/ITeamModel';
 
 const message = 'Match not found';
 
 export default class MatchService {
-  constructor(private matchModel: IMatchModel = new MatchModel()) {}
+  constructor(
+    private matchModel: IMatchModel = new MatchModel(),
+    private teamModel: ITeamModel = new TeamModel(),
+  ) {}
 
   async getallMatches(inProgress: string): Promise<ServiceResponse<IMatch[]>> {
     const allMatches = await this.matchModel.findAll();
@@ -55,7 +60,16 @@ export default class MatchService {
     return { status: 'SUCCESSFUL', data: { message: 'Finished' } };
   }
 
-  public async createMatch(match: INewMatch): Promise<ServiceResponse<IMatch>> {
+  public async createMatch(match: INewMatch):
+  Promise<ServiceResponse<IMatch> | ServiceResponse<ServiceMessage>> {
+    const homeTeam = await this.teamModel.findById(match.homeTeamId);
+    const awayTeam = await this.teamModel.findById(match.awayTeamId);
+    console.log(homeTeam);
+    console.log(awayTeam);
+
+    if (!homeTeam || !awayTeam) {
+      return { status: 'NOT_FOUND', data: { message: 'There is no team with such id!' } };
+    }
     const newMatch = await this.matchModel.create(match);
     return { status: 'SUCCESSFUL', data: newMatch };
   }

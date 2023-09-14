@@ -9,6 +9,7 @@ const matchesRouter = Router();
 matchesRouter.post(
   '/',
   Validations.validateToken,
+  Validations.validateNewMatch,
   (req: Request, res: Response) => matchController.createMatch(req, res),
 );
 
