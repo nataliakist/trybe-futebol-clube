@@ -1,5 +1,5 @@
 import MatchModel from '../models/MatchModel';
-import { IMatch } from '../Interfaces/matches/IMatch';
+import { IMatch, INewMatch } from '../Interfaces/matches/IMatch';
 import { IMatchModel } from '../Interfaces/matches/IMatchModel';
 import { ServiceResponse, ServiceMessage } from '../Interfaces/ServiceResponse';
 
@@ -53,5 +53,10 @@ export default class MatchService {
         data: { message: `There are no updates to perform in Match ${id}` } };
     }
     return { status: 'SUCCESSFUL', data: { message: 'Finished' } };
+  }
+
+  public async createMatch(match: INewMatch): Promise<ServiceResponse<IMatch>> {
+    const newMatch = await this.matchModel.create(match);
+    return { status: 'SUCCESSFUL', data: newMatch };
   }
 }

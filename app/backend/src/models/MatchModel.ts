@@ -1,6 +1,6 @@
 import SequelizeTeam from '../database/models/SequelizeTeam';
 import SequelizeMatch from '../database/models/SequelizeMatch';
-import { IMatch } from '../Interfaces/matches/IMatch';
+import { IMatch, INewMatch } from '../Interfaces/matches/IMatch';
 import { IMatchModel } from '../Interfaces/matches/IMatchModel';
 
 export default class MatchModel implements IMatchModel {
@@ -43,5 +43,11 @@ export default class MatchModel implements IMatchModel {
     if (affectedRows === 0) return false;
 
     return true;
+  }
+
+  async create(data: INewMatch): Promise<IMatch> {
+    const dbData = await this.model.create({ ...data, inProgress: true });
+
+    return dbData;
   }
 }

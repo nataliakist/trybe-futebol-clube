@@ -6,6 +6,12 @@ const matchController = new MatchController();
 
 const matchesRouter = Router();
 
+matchesRouter.post(
+  '/',
+  Validations.validateToken,
+  (req: Request, res: Response) => matchController.createMatch(req, res),
+);
+
 matchesRouter.get('/', (req: Request, res: Response) =>
   matchController.getAllMatches(req, res));
 

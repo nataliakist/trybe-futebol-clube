@@ -7,3 +7,10 @@ export interface IMatch extends Identificable {
   awayTeamGoals: number;
   inProgress: boolean;
 }
+
+export interface INewMatch {
+  homeTeamId: number;
+  homeTeamGoals: number;
+  awayTeamId: number;
+  awayTeamGoals: number;
+}
