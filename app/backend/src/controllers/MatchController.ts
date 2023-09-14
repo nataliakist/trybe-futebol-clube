@@ -20,9 +20,21 @@ export default class MatchController {
     return res.status(200).json(serviceResponse.data);
   }
 
-  async updateMatch(req: Request, res: Response): Promise<Response> {
+  async updateProgress(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
-    const serviceResponse = await this.matchService.updateMatch(+id);
+    const serviceResponse = await this.matchService.updateProgress(+id);
+
+    if (serviceResponse.status !== 'SUCCESSFUL') {
+      return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
+    }
+
+    return res.status(200).json(serviceResponse.data);
+  }
+
+  async updateGoals(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+    const { homeTeamGoals, awayTeamGoals } = req.body;
+    const serviceResponse = await this.matchService.updateGoals(+id, homeTeamGoals, awayTeamGoals);
 
     if (serviceResponse.status !== 'SUCCESSFUL') {
       return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);

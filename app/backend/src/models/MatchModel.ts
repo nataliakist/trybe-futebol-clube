@@ -26,8 +26,20 @@ export default class MatchModel implements IMatchModel {
     return dbData;
   }
 
-  async update(id: IMatch['id']): Promise<boolean> {
+  async updateProgress(id: IMatch['id']): Promise<boolean> {
     const [affectedRows] = await this.model.update({ inProgress: false }, { where: { id } });
+    if (affectedRows === 0) return false;
+
+    return true;
+  }
+
+  async updateGoals(id: IMatch['id'], homeTeamGoals: number, awayTeamGoals: number):
+  Promise<boolean> {
+    const [affectedRows] = await this.model.update(
+      { homeTeamGoals, awayTeamGoals },
+      { where: { id } },
+    );
+
     if (affectedRows === 0) return false;
 
     return true;

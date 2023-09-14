@@ -12,7 +12,13 @@ matchesRouter.get('/', (req: Request, res: Response) =>
 matchesRouter.patch(
   '/:id/finish',
   Validations.validateToken,
-  (req: Request, res: Response) => matchController.updateMatch(req, res),
+  (req: Request, res: Response) => matchController.updateProgress(req, res),
+);
+
+matchesRouter.patch(
+  '/:id',
+  Validations.validateToken,
+  (req: Request, res: Response) => matchController.updateGoals(req, res),
 );
 
 export default matchesRouter;

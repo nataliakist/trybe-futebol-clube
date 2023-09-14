@@ -10,7 +10,8 @@ export interface ICRUDModelReader<T> {
 }
 
 export interface ICRUDModelUpdater {
-  update(id: ID): Promise<boolean>,
+  updateProgress(id: ID): Promise<boolean>,
+  updateGoals(id: ID, homeTeamGoals: number, awayTeamGoals: number): Promise<boolean>,
 }
 
 export interface ICRUDModelDeleter {
