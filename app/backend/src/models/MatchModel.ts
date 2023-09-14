@@ -25,4 +25,11 @@ export default class MatchModel implements IMatchModel {
     if (dbData == null) return null;
     return dbData;
   }
+
+  async update(id: IMatch['id']): Promise<boolean> {
+    const [affectedRows] = await this.model.update({ inProgress: false }, { where: { id } });
+    if (affectedRows === 0) return false;
+
+    return true;
+  }
 }

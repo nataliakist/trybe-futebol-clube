@@ -1,7 +1,7 @@
 import MatchModel from '../models/MatchModel';
 import { IMatch } from '../Interfaces/matches/IMatch';
 import { IMatchModel } from '../Interfaces/matches/IMatchModel';
-import { ServiceResponse } from '../Interfaces/ServiceResponse';
+import { ServiceResponse, ServiceMessage } from '../Interfaces/ServiceResponse';
 
 const message = 'Match not found';
 
@@ -28,5 +28,17 @@ export default class MatchService {
     const match = await this.matchModel.findById(id);
     if (!match) return { status: 'NOT_FOUND', data: { message } };
     return { status: 'SUCCESSFUL', data: match };
+  }
+
+  async updateMatch(id: IMatch['id']): Promise<ServiceResponse<ServiceMessage>> {
+    const match = await this.matchModel.findById(id);
+    if (!match) return { status: 'NOT_FOUND', data: { message: `Book ${id} not found` } };
+
+    const updatedMatch = await this.matchModel.update(id);
+    if (!updatedMatch) {
+      return { status: 'CONFLICT',
+        data: { message: `There are no updates to perform in Match ${id}` } };
+    }
+    return { status: 'SUCCESSFUL', data: { message: 'Finished' } };
   }
 }

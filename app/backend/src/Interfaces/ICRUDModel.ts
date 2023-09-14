@@ -9,8 +9,8 @@ export interface ICRUDModelReader<T> {
   findById(id: ID): Promise<T | null>,
 }
 
-export interface ICRUDModelUpdater<T> {
-  update(id: ID, data: Partial<T>): Promise<T | null>,
+export interface ICRUDModelUpdater {
+  update(id: ID): Promise<boolean>,
 }
 
 export interface ICRUDModelDeleter {
@@ -18,5 +18,5 @@ export interface ICRUDModelDeleter {
 }
 
 export interface ICRUDModel<T>
-  extends ICRUDModelCreator<T>, ICRUDModelReader<T>, ICRUDModelUpdater<T>,
+  extends ICRUDModelCreator<T>, ICRUDModelReader<T>, ICRUDModelUpdater,
   ICRUDModelDeleter { }

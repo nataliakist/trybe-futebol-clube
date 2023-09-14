@@ -19,4 +19,15 @@ export default class MatchController {
     }
     return res.status(200).json(serviceResponse.data);
   }
+
+  async updateMatch(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+    const serviceResponse = await this.matchService.updateMatch(+id);
+
+    if (serviceResponse.status !== 'SUCCESSFUL') {
+      return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
+    }
+
+    return res.status(200).json(serviceResponse.data);
+  }
 }
