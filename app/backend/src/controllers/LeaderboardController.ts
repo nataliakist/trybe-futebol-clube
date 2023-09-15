@@ -7,9 +7,18 @@ export default class LeaderboardController {
     private leaderboardService = new LeaderboardService(),
   ) { }
 
-  async getLeaderboard(_req:Request, res:Response): Promise<Response> {
-    const serviceResponse = await this.leaderboardService.orderClassification();
-    console.log(serviceResponse.data);
+  async getHomeLeaderboard(_req:Request, res:Response): Promise<Response> {
+    const serviceResponse = await this.leaderboardService.getNewClassification('home');
+
+    if (serviceResponse.status !== 'SUCCESSFUL') {
+      return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
+    }
+
+    return res.status(200).json(serviceResponse.data);
+  }
+
+  async getAwayLeaderboard(_req:Request, res:Response): Promise<Response> {
+    const serviceResponse = await this.leaderboardService.getNewClassification('away');
 
     if (serviceResponse.status !== 'SUCCESSFUL') {
       return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);

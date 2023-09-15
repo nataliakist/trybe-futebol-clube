@@ -64,8 +64,6 @@ export default class MatchService {
   Promise<ServiceResponse<IMatch> | ServiceResponse<ServiceMessage>> {
     const homeTeam = await this.teamModel.findById(match.homeTeamId);
     const awayTeam = await this.teamModel.findById(match.awayTeamId);
-    console.log(homeTeam);
-    console.log(awayTeam);
 
     if (!homeTeam || !awayTeam) {
       return { status: 'NOT_FOUND', data: { message: 'There is no team with such id!' } };

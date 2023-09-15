@@ -7,8 +7,8 @@ import leaderboardRouter from './leaderboard.router';
 const router = Router();
 
 router.use('/teams', teamsRouter);
-router.use('/login', loginRouter);
 router.use('/matches', matchesRouter);
+router.use('/login', loginRouter);
 router.use('/leaderboard', leaderboardRouter);
 
 export default router;
