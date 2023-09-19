@@ -27,9 +27,9 @@ export default class LeaderboardService {
       totalDraws: teamDraws.length,
       totalLosses: teamMatches.length - teamWins.length - teamDraws.length,
       goalsFavor: teamMatches.map((match) => match.homeTeamGoals)
-        .reduce((acc, goalsFavor) => acc + goalsFavor),
+        .reduce((acc, goalsFavor) => acc + goalsFavor, 0),
       goalsOwn: teamMatches.map((match) => match.awayTeamGoals)
-        .reduce((acc, goalsOwn) => acc + goalsOwn),
+        .reduce((acc, goalsOwn) => acc + goalsOwn, 0),
     };
   }
 
@@ -47,13 +47,13 @@ export default class LeaderboardService {
       totalDraws: teamDraws.length,
       totalLosses: teamMatches.length - teamWins.length - teamDraws.length,
       goalsFavor: teamMatches.map((match) => match.awayTeamGoals)
-        .reduce((acc, goalsFavor) => acc + goalsFavor),
-      goalsOwn: teamMatches.map((match) => match.awayTeamGoals)
-        .reduce((acc, goalsOwn) => acc + goalsOwn),
+        .reduce((acc, goalsFavor) => acc + goalsFavor, 0),
+      goalsOwn: teamMatches.map((match) => match.homeTeamGoals)
+        .reduce((acc, goalsOwn) => acc + goalsOwn, 0),
     };
   }
 
-  async getClassification(): Promise<IFirstLeaderboard[]> {
+  async getClassification(): Promise<ServiceResponse<ILeaderboard[]>> {
     const getTeams = await this.teamModel.findAll() as ITeam[];
     const getMatches = await this.matchModel.findAll() as IMatch[];
     const getFinishedMatches = getMatches.filter(({ inProgress }) => !inProgress);
@@ -66,10 +66,15 @@ export default class LeaderboardService {
         teamMatch.homeTeamGoals === teamMatch.awayTeamGoals);
       return LeaderboardService.teamStats(team.teamName, teamMatches, wins, draws);
     });
-    return classification;
+    const completeClassification:ILeaderboard[] = classification.map((cTeam) => ({ ...cTeam,
+      goalsBalance: cTeam.goalsFavor - cTeam.goalsOwn,
+      efficiency: ((cTeam.totalPoints / (cTeam.totalGames * 3)) * 100).toFixed(2).toString(),
+    }));
+    const orderHomeTeams = LeaderboardService.orderClassification(completeClassification);
+    return { status: 'SUCCESSFUL', data: orderHomeTeams };
   }
 
-  async getAwayClassification(): Promise<IFirstLeaderboard[]> {
+  async getAwayClassification(): Promise<ServiceResponse<IFirstLeaderboard[]>> {
     const getTeams = await this.teamModel.findAll() as ITeam[];
     const getMatches = await this.matchModel.findAll() as IMatch[];
     const getFinishedMatches = getMatches.filter(({ inProgress }) => !inProgress);
@@ -82,7 +87,8 @@ export default class LeaderboardService {
         teamMatch.awayTeamGoals === teamMatch.homeTeamGoals);
       return LeaderboardService.awayTeamStats(team.teamName, teamMatches, wins, draws);
     });
-    return classification;
+    const orderAwayTeams = LeaderboardService.orderAwayClassification(classification);
+    return { status: 'SUCCESSFUL', data: orderAwayTeams };
   }
 
   static orderClassification(completeClassification: ILeaderboard[]): ILeaderboard[] {
@@ -107,23 +113,5 @@ export default class LeaderboardService {
       return 0;
     });
     return orderedClassification;
-  }
-
-  async getNewClassification(team: 'home' | 'away' | undefined):
-  Promise<ServiceResponse<ILeaderboard[] | IFirstLeaderboard[]>> {
-    let classification: IFirstLeaderboard[];
-    let orderedClassification: IFirstLeaderboard[] | ILeaderboard[];
-    if (team === 'away') {
-      classification = await this.getAwayClassification();
-      orderedClassification = LeaderboardService.orderAwayClassification(classification);
-    } else {
-      classification = await this.getClassification();
-      const completeClassification:ILeaderboard[] = classification.map((cTeam) => ({ ...cTeam,
-        goalsBalance: cTeam.goalsFavor - cTeam.goalsOwn,
-        efficiency: ((cTeam.totalPoints / (cTeam.totalGames * 3)) * 100).toFixed(2).toString(),
-      }));
-      orderedClassification = LeaderboardService.orderClassification(completeClassification);
-    }
-    return { status: 'SUCCESSFUL', data: orderedClassification };
   }
 }

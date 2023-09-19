@@ -8,7 +8,7 @@ export default class LeaderboardController {
   ) { }
 
   async getHomeLeaderboard(_req:Request, res:Response): Promise<Response> {
-    const serviceResponse = await this.leaderboardService.getNewClassification('home');
+    const serviceResponse = await this.leaderboardService.getClassification();
 
     if (serviceResponse.status !== 'SUCCESSFUL') {
       return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
@@ -18,7 +18,7 @@ export default class LeaderboardController {
   }
 
   async getAwayLeaderboard(_req:Request, res:Response): Promise<Response> {
-    const serviceResponse = await this.leaderboardService.getNewClassification('away');
+    const serviceResponse = await this.leaderboardService.getAwayClassification();
 
     if (serviceResponse.status !== 'SUCCESSFUL') {
       return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);

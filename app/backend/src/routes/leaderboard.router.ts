@@ -6,11 +6,6 @@ const leaderboardRouter = Router();
 const leaderboardController = new LeaderboardController();
 
 leaderboardRouter.get(
-  '/',
-  (req: Request, res: Response) => leaderboardController.getHomeLeaderboard(req, res),
-);
-
-leaderboardRouter.get(
   '/home',
   (req: Request, res: Response) => leaderboardController.getHomeLeaderboard(req, res),
 );
@@ -18,6 +13,11 @@ leaderboardRouter.get(
 leaderboardRouter.get(
   '/away',
   (req: Request, res: Response) => leaderboardController.getAwayLeaderboard(req, res),
+);
+
+leaderboardRouter.get(
+  '/',
+  (req: Request, res: Response) => leaderboardController.getHomeLeaderboard(req, res),
 );
 
 export default leaderboardRouter;
