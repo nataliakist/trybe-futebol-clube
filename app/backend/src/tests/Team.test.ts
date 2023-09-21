@@ -23,7 +23,7 @@ describe('Testando as rotas /teams', () => {
     expect(body).to.deep.equal(teams);
   });
 
-  it('Lista um livro de acordo com seu id', async function() {
+  it('Lista um time de acordo com seu id', async function() {
     sinon.stub(SequelizeTeam, 'findByPk').resolves(team as any);
 
     const { status, body } = await chai.request(app).get('/teams/1');
@@ -32,7 +32,7 @@ describe('Testando as rotas /teams', () => {
     expect(body).to.deep.equal(team);
   });
 
-  it('Retorna not found caso o livro não exista', async function() {
+  it('Retorna not found caso o time não exista', async function() {
     sinon.stub(SequelizeTeam, 'findByPk').resolves(null);
 
     const { status, body } = await chai.request(app).get('/teams/1');

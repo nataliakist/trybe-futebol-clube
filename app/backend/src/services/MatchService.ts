@@ -57,7 +57,7 @@ export default class MatchService {
       return { status: 'CONFLICT',
         data: { message: `There are no updates to perform in Match ${id}` } };
     }
-    return { status: 'SUCCESSFUL', data: { message: 'Finished' } };
+    return { status: 'SUCCESSFUL', data: { message: 'Updated' } };
   }
 
   public async createMatch(match: INewMatch):
